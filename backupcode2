@@ -1,5 +1,6 @@
 // Created Nick Livingston 2017
 // Modified R Lee, X Hu 2018
+// WORKING 12/10, still needs to work on directions (?) and thresholds, but recognizes that red + siren = run
 
 //*************************************************** Function Declarations ***********************************************************//
 
