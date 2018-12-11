@@ -40,6 +40,18 @@ const int RIGHT_MOTOR = 3;
 const float SERVO_MAX = 2047.0;
 const float TOP_SPEED = 1023.0;//100;
 
+float left_photo_value;
+float right_photo_value;
+int photo_offset = 80;
+float photo_coeff = 5.0;
+float photo_difference;
+float photo_ratio;
+float photo_threshold = 40.0;	
+float photo_max = 1023.0;
+int left_ir_value;
+int right_ir_value;
+int avoid_threshold = 300;
+
 //Boolean Constants
 const int TRUE = 1;
 const int FALSE = 0;
