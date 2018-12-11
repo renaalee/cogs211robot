@@ -61,7 +61,7 @@ int main()
 		else if(check_avoid_conditions()){
 			avoid();
 		}
-		else if(check_seek_light_conditions()){
+		else if(check_seek_dark_conditions()){
 			seek_light();
 		}
 		else{straight_cruise();}
