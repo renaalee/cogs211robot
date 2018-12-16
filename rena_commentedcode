@@ -1,7 +1,7 @@
 // Created Nick Livingston 2017
 // Modified R Lee, X Hu, D Schwitzgebel 2018
 
-//*************************************************** Function Declarations ***********************************************************//
+//******************************** Function Declarations ********************************//
 
 //Behavior Primitive Functions
 int check_bluered();
@@ -25,7 +25,7 @@ int max(int first, int second);
 //Motor Control Function
 void drive(float left, float right, float delay_seconds);
 
-//*************************************************** Global Constant Declarations ****************************************************//
+//******************************** Global Constant Declarations ********************************//
 const int FRONT_BUMP = 0;
 const int BACK_BUMP = 1;//15;
 const int LEFT_PHOTO = 2;
@@ -56,7 +56,7 @@ int avoid_threshold = 300;
 const int TRUE = 1;
 const int FALSE = 0;
 
-//*************************************************** Function Definitions ****************************************************//
+//******************************** Function Definitions ********************************//
 int main() 
 {
 	int i;
