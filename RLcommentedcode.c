@@ -19,8 +19,8 @@ void avoid();                                   // checking functions. The outpu
                                                 // functions were used in threshold-based 
 void straight_cruise();                         // if statements in the actuating motor
 void stop();                                    // functions, which are 'void' non-objects
-								                // that do not return a value, they simply
-								                // take sensory input and cause a motor
+						// that do not return a value, they simply
+						// take sensory input and cause a motor
                                                 // output. 
 //Motor Control Function
 void drive(float left, float right, float delay_seconds); 
@@ -40,19 +40,19 @@ const int LEFT_PHOTO = 2;                       // These first seven global cons
 const int RIGHT_PHOTO = 3;                      // assign sensory input objects (which will be 
 const int LEFT_IR = 4;                          // used in condition checking functions) to the 
 const int RIGHT_IR = 5;                         // anaglog ports (by number) on the KIPR controller. 
-const int MIC_READ = 6;							// MIC_READ was the only new analog input we used.
+const int MIC_READ = 6;				// MIC_READ was the only new analog input we used.
 
-const int LEFT_MOTOR = 0;						// These two constants assign the servo motors
-const int RIGHT_MOTOR = 3;						// to their connection ports on the KIPR controller.
-												// They are called in the drive function when
-const float SERVO_MAX = 2047.0;					// actuating the movement of the motors. 
+const int LEFT_MOTOR = 0;			// These two constants assign the servo motors
+const int RIGHT_MOTOR = 3;			// to their connection ports on the KIPR controller.
+						// They are called in the drive function when
+const float SERVO_MAX = 2047.0;			// actuating the movement of the motors. 
 const float TOP_SPEED = 1023.0;	
 
-float left_photo_value;							// These global constants were appropriated directly
-float right_photo_value;						// from N Livingston's 'sensors.h' file and are
-int photo_offset = 80;							// involved in the default behaviors of the robot:
-float photo_coeff = 5.0;						// seek_dark, avoid, and escape. They use input
-float photo_difference;							// from the photosensors and IR proximity sensors.
+float left_photo_value;				// These global constants were appropriated directly
+float right_photo_value;			// from N Livingston's 'sensors.h' file and are
+int photo_offset = 80;				// involved in the default behaviors of the robot:
+float photo_coeff = 5.0;			// seek_dark, avoid, and escape. They use input
+float photo_difference;				// from the photosensors and IR proximity sensors.
 float photo_ratio;
 float photo_threshold = 40.0;	
 float photo_max = 1023.0;
@@ -60,136 +60,135 @@ int left_ir_value;
 int right_ir_value;
 int avoid_threshold = 300;
 
-//Boolean Constants								// We assigned integer values to the Boolean 
-const int TRUE = 1;								// constants in case they needed to be used in an 
-const int FALSE = 0;							// integer form. The only instance of using an 
-												// integer Boolean was in the  while loop of the 
-												// main function. 
+//Boolean Constants				// We assigned integer values to the Boolean 
+const int TRUE = 1;				// constants in case they needed to be used in an 
+const int FALSE = 0;				// integer form. The only instance of using an 
+						// integer Boolean was in the  while loop of the 
+						// main function. 
 //**************************************** Function Definitions **************************************//
-int main() 
-{												// The main function initiates the connection
-	int i;										// between the robot and camera, and prepares  
-	enable_servos();							// the robot to activate the motors. These are from
-  	camera_open(LOW_RES);						// the KIPR motor and sensor function libraries. 
+int main(){ 					// The main function initiates the connection
+int i;						// between the robot and camera, and prepares  
+	enable_servos();			// the robot to activate the motors. These are from
+  	camera_open(LOW_RES);			// the KIPR motor and sensor function libraries. 
 												
-	while(1){									// In an infinite while (true) loop, the function
-    if(check_red()&&check_siren()){				// loops through a behavior hierarchy where 
-      run_away();								// its top priority is looking for police-like
-    }											// stimuli and running away from it. Otherwise,
-		else if(check_escape_conditions()){		// the robot's default behavior assimilates
-			escape();							// that of the robot ethology lab robots. This
-		}										// leads the robot to travel a random and 
-		else if(check_avoid_conditions()){		// unpredicted path in its environment, so once
-			avoid();							// the intented target behavior (running away)
-		}										// is activated, we can more easily observe it. 
+	while(1){				// In an infinite while (true) loop, the function
+    if(check_red()&&check_siren()){		// loops through a behavior hierarchy where 
+      run_away();				// its top priority is looking for police-like
+    }						// stimuli and running away from it. Otherwise,
+		else if(check_escape_conditions()){// the robot's default behavior assimilates
+			escape();		// that of the robot ethology lab robots. This
+		}				// leads the robot to travel a random and 
+		else if(check_avoid_conditions()){// unpredicted path in its environment, so once
+			avoid();		// the intented target behavior (running away)
+		}				// is activated, we can more easily observe it. 
 		else{
 			straight_cruise();
 		}
 	}	
-	return 0;									// Returning 0 from the main function is necessary
-}												// because the function is design to return an 
-												// integer value. The function returning 0 is a 
-												// way of indicating that the function worked 
-												// properly, like an 'Exit Status' of the 
-												// application.  
+	return 0;				// Returning 0 from the main function is necessary
+}						// because the function is design to return an 
+						// integer value. The function returning 0 is a 
+						// way of indicating that the function worked 
+						// properly, like an 'Exit Status' of the 
+						// application.  
 /******************************************************************************************************/		
-int check_redblue(){							// **Checking for colors:
-  camera_update();								// Use of the camera in our sensory inputs
-  if((get_object_count(0)>0)					// involved employing some functions built-in in 
-  &&(get_object_area(0,0)>20){					// the vision library (camera_object and get_object
-  //&&(get_object_count(1)>0)					// functions), which were outlined in the KIPR
-  //&&(get_object_area(1,0)>20){				// user manual. Channel 0 was configured on
-	  //printf("red n blue!\n");				// the controller to detect red-colored objects, 
-    return TRUE;								// and Channel 1 was configured to detect blue- 
-  }												// colored objects. This configuration was saved		
-  else{											// to the controller under Settings>Channels.		
-	  	//printf("free!\n")						// The function's purpose was to return TRUE (1)		
-		return FALSE;							// if it detected both red and blue objects with		 
-	}    										// areas greater than 20 pixels in the camera's.		
-}												// visual field. One of the more cumbersome		
-												// obstacles in this project was having the 
-												// camera recognize both colors at once. Due to 
-												// lighting constraints and other issues involving 
-												// the camera's functions (random and unwarranted
-												// self-disconnection), we elected to have the
-												// function check only for red objects in the 
-												// visual field, so that it would more readily
-												// recognize stimuli that it should run away from. 
-												// Confirmatory print statements were removed from the
-												// function, but were vital in our assessment of the
-												// success of the function.  
+int check_redblue(){				// **Checking for colors:
+  camera_update();				// Use of the camera in our sensory inputs
+  if((get_object_count(0)>0)			// involved employing some functions built-in in 
+  &&(get_object_area(0,0)>20){			// the vision library (camera_object and get_object
+  //&&(get_object_count(1)>0)			// functions), which were outlined in the KIPR
+  //&&(get_object_area(1,0)>20){		// user manual. Channel 0 was configured on
+	  //printf("red n blue!\n");		// the controller to detect red-colored objects, 
+    return TRUE;				// and Channel 1 was configured to detect blue- 
+  }						// colored objects. This configuration was saved		
+  else{						// to the controller under Settings>Channels.		
+	  	//printf("free!\n")		// The function's purpose was to return TRUE (1)		
+		return FALSE;			// if it detected both red and blue objects with		 
+	}    					// areas greater than 20 pixels in the camera's.		
+}						// visual field. One of the more cumbersome		
+						// obstacles in this project was having the 
+						// camera recognize both colors at once. Due to 
+						// lighting constraints and other issues involving 
+						// the camera's functions (random and unwarranted
+						// self-disconnection), we elected to have the
+						// function check only for red objects in the 
+						// visual field, so that it would more readily
+						// recognize stimuli that it should run away from. 
+						// Confirmatory print statements were removed from the
+						// function, but were vital in our assessment of the
+						// success of the function.  
 /******************************************************************************************************/
-int check_siren(){								// **Checking for sound:
-	int sound_threshold = 45;					// A threshold for the analog input from the 
-	int sound_value = analog_et(MIC_READ);		// microphone was set somewhat arbitrarily to 45. 
-	if(sound_value >= sound_threshold){			// The microphone was best at detecting large and 
-		//printf("siren\n");					// sudden changes in sound frequency, so we set it 
-		return TRUE;							// to a value reasonably above its baseline reading, 
-	}else{										// which was 27. This function works by returning  
-		//printf("no sound\n");					// TRUE (1) if the reading from analog port 6, the
-		return FALSE;							// microphone, is greater than our set threshold. 
-	}											// If the threshold is not met, it returns FALSE (0)  
-}												// and its motor function remains unaffected.
-												// Again, confirmatory print statements were removed 
-												// from the function, but were vital in our assessment 
-												// of the success of the function.
+int check_siren(){				// **Checking for sound:
+	int sound_threshold = 45;		// A threshold for the analog input from the 
+	int sound_value = analog_et(MIC_READ);	// microphone was set somewhat arbitrarily to 45. 
+	if(sound_value >= sound_threshold){	// The microphone was best at detecting large and 
+		//printf("siren\n");		// sudden changes in sound frequency, so we set it 
+		return TRUE;			// to a value reasonably above its baseline reading, 
+	}else{					// which was 27. This function works by returning  
+		//printf("no sound\n");		// TRUE (1) if the reading from analog port 6, the
+		return FALSE;			// microphone, is greater than our set threshold. 
+	}					// If the threshold is not met, it returns FALSE (0)  
+}						// and its motor function remains unaffected.
+						// Again, confirmatory print statements were removed 
+						// from the function, but were vital in our assessment 
+						// of the success of the function.
 
-												// **Combined stimuli conditions:
-												// As you can see in line 76, the 'if' clause that 
-												// activates the run_away function (below) is 
-												// dependent upon simultaneous detection of the  
-												// target color objects and sound value. So, the 
-												// robot would not run away from sound stimuli or  
-												// color stimuli alone; only when they were both  
-												// detected at some point in time was the run_away 
-												// function activated. 
+						// **Combined stimuli conditions:
+						// As you can see in line 76, the 'if' clause that 
+						// activates the run_away function (below) is 
+						// dependent upon simultaneous detection of the  
+						// target color objects and sound value. So, the 
+						// robot would not run away from sound stimuli or  
+						// color stimuli alone; only when they were both  
+						// detected at some point in time was the run_away 
+						// function activated. 
 /******************************************************************************************************/		
-void run_away(){								// This function called the drive function, which is
-  drive(0.5, 0.5, 0.5);							// defined starting in line 246. It causes the robot 
-  msleep(8000);									// to drive backwards at a faster speed than normal.
-}												// We found that the robot's motor directions were 
-												// somehow configured to be backwards, so in this 
-												// function the left and right motors are set to drive
-												// at +0.5, whereas in the straight_cruise function 
-												// (line 241), they are set to be -0.2. The msleep 
-												// function causes the robot to perform its previous
-												// behavior (driving backwards) for 8000 milliseconds, 
-												// or 8 seconds. Once the robot completed this behavior, 
-												// unless the stimuli were still present, it began
-												// resuming its default behavior of random cruising. 
+void run_away(){				// This function called the drive function, which is
+  drive(0.5, 0.5, 0.5);				// defined starting in line 246. It causes the robot 
+  msleep(8000);					// to drive backwards at a faster speed than normal.
+}						// We found that the robot's motor directions were 
+						// somehow configured to be backwards, so in this 
+						// function the left and right motors are set to drive
+						// at +0.5, whereas in the straight_cruise function 
+						// (line 241), they are set to be -0.2. The msleep 
+						// function causes the robot to perform its previous
+						// behavior (driving backwards) for 8000 milliseconds, 
+						// or 8 seconds. Once the robot completed this behavior, 
+						// unless the stimuli were still present, it began
+						// resuming its default behavior of random cruising. 
 /******************************************************************************************************/
-int check_escape_conditions(){					// The rest of the function definitions from here on
-	int bump_threshold = 0;						// are directly appropriated from the base code 
-	int bump_max = 400;							// written by N Livingston. The way these condition
+int check_escape_conditions(){			// The rest of the function definitions from here on
+	int bump_threshold = 0;			// are directly appropriated from the base code 
+	int bump_max = 400;			// written by N Livingston. The way these condition
 	int front_bump_value = analog10(FRONT_BUMP);// checking functions and motor functions were
-												// written largely influenced the design of our 
-	if(front_bump_value >= bump_threshold 		// novel behavior functions. This function takes the
-	&& front_bump_value <= bump_max){			// analog input from the front bumper, and if it
-		return TRUE;							// falls within a specified range (between the
-	}else{										// threshold and the maximum), it will return TRUE
-		return FALSE;							// (1). The baseline reading for the bumper was
-	}											// around 1000, and decreased with applied pressure. 
+						// written largely influenced the design of our 
+	if(front_bump_value >= bump_threshold 	// novel behavior functions. This function takes the
+	&& front_bump_value <= bump_max){	// analog input from the front bumper, and if it
+		return TRUE;			// falls within a specified range (between the
+	}else{					// threshold and the maximum), it will return TRUE
+		return FALSE;			// (1). The baseline reading for the bumper was
+	}					// around 1000, and decreased with applied pressure. 
 }
 /******************************************************************************************************/
-void escape(){									// If the escape_conditions function returned TRUE,					
-	int bump_threshold = 250;					// in the main function it triggered the activation
-	int bump_max = 400;							// of the escape behavior (lines 79-80). Notice that
+void escape(){					// If the escape_conditions function returned TRUE,					
+	int bump_threshold = 250;		// in the main function it triggered the activation
+	int bump_max = 400;			// of the escape behavior (lines 79-80). Notice that
 	int front_bump_value = analog10(FRONT_BUMP);// there are two separate motor activations here.
-												// There are two sets of ranges into which the bumper 
-	if(front_bump_value < bump_threshold){		// sensor value can fall between. Depending on that 
-		drive(0.0, 0.4, 0.50);					// value, the robot will make a turn to the left or 
-	}											// to the right. This is done by sending motor 
+						// There are two sets of ranges into which the bumper 
+	if(front_bump_value < bump_threshold){	// sensor value can fall between. Depending on that 
+		drive(0.0, 0.4, 0.50);		// value, the robot will make a turn to the left or 
+	}					// to the right. This is done by sending motor 
 	else if(front_bump_value >= bump_threshold  // activation to only the left or right servo motor 
-	&& front_bump_value <= bump_max){			// (wheel), and keeping the other stationary. 
+	&& front_bump_value <= bump_max){	// (wheel), and keeping the other stationary. 
 		drive(0.4, 0.0, 0.50);
 	}
 }
 /******************************************************************************************************/
-int check_seek_dark_conditions(){				// This function uses the analog value from the two
-	int left_photo_raw;							// photosensors to create variables which keep track
-	int right_photo_raw;						// of each raw value, a manipulated version of that
-	float right_coeff;							// value in relation to the maxiumum input value, and
-	float left_coeff;							// the different between the left and right values. 
+int check_seek_dark_conditions(){		// This function uses the analog value from the two
+	int left_photo_raw;			// photosensors to create variables which keep track
+	int right_photo_raw;			// of each raw value, a manipulated version of that
+	float right_coeff;			// value in relation to the maxiumum input value, and
+	float left_coeff;			// the different between the left and right values. 
 	left_photo_raw = (analog_et(LEFT_PHOTO) - photo_offset);
 	right_photo_raw = (analog_et(RIGHT_PHOTO));	// The photosensors are sensitive to 
 												//
